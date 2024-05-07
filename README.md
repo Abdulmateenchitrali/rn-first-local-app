@@ -1,0 +1,1 @@
+# React Native First Offline Application powered by PowerSync
