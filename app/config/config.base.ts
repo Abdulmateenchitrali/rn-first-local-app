@@ -1,7 +1,9 @@
 export interface ConfigBaseProps {
   persistNavigation: "always" | "dev" | "prod" | "never"
   catchErrors: "always" | "dev" | "prod" | "never"
-  exitRoutes: string[]
+  exitRoutes: string[],
+  supabaseUrl:string,
+  supabaseAnonKey:string
 }
 
 export type PersistNavigationConfig = ConfigBaseProps["persistNavigation"]
@@ -21,6 +23,8 @@ const BaseConfig: ConfigBaseProps = {
    * is pressed while in that screen. Only affects Android.
    */
   exitRoutes: ["Welcome"],
+  supabaseUrl:"https://fawljrfbevnvxjlnedrj.supabase.co",
+  supabaseAnonKey:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhd2xqcmZiZXZudnhqbG5lZHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUwODEyNzUsImV4cCI6MjAzMDY1NzI3NX0.ffyv6uJc0qEnWBWxf9Tlc9PVgZhnwCAxGXREFQQxcHA"
 }
 
 export default BaseConfig

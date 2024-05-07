@@ -63,7 +63,8 @@
             "flipper": false
           },
           "android": {
-            "newArchEnabled": false
+            "newArchEnabled": false,
+            "networkInspector": false
           }
         }
       ],
