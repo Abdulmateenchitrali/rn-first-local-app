@@ -21,14 +21,76 @@ export const AuthProvider = ({ children }: PropsWithChildren<any>) => {
     const [error, setError] = useState("")
     const [user, setUser] = useState<User | null>(null)
 
-    const signIn = useCallback(async (email:string,password:string) => {
-         
-    },[])
+    const signIn = useCallback(async (email: string, password: string) => {
+        setLoading(false);
+        setError("");
+        setUser(null);
+        try {
+            const {
+                data: { session, user },
+                error,
+            } = await supabase.auth.signInWithPassword({ email, password });
 
+            if (session && user) {
+                setSignedIn(true);
+                setUser(user);
+            } else {
+                throw new Error(`Couldn't sign in ${error?.message}`);
+                setSignedIn(false);
+                setUser(null)
+            }
 
-    const value = useMemo(()=>{
-        signIn
-    },[])
+        } catch (error: any) {
+            setError(error?.message ?? "Unknow error: ");
+            setSignedIn(false);
+            setUser(null)
+
+        } finally {
+            setLoading(false);
+        }
+    }, [
+        setSignedIn, setUser, setLoading, setError, supabase
+    ])
+
+    const signUp = useCallback(async (email: string, password: string) => {
+        try {
+            const {
+                data: { session, user },
+                error
+            } = await supabase.auth.signUp({ email, password });
+
+            if (error) {
+                setSignedIn(false);
+                setError(error?.message);
+            } else if (session) {
+                await supabase.auth.setSession(session);
+                setSignedIn(true);
+                setUser(user);
+            }
+
+        } catch (error) {
+            setUser(null)
+            setSignedIn(false)
+            setError(error?.message ?? "Unknown error")
+        } finally {
+            setLoading(false)
+        }
+    }, [setSignedIn, setLoading, setError, setUser, supabase]);
+
+    const signOut = useCallback(async () => {
+        setLoading(true)
+        await supabase.auth.signOut()
+        setError("")
+        setSignedIn(false)
+        setLoading(false)
+        setUser(null)
+    }, [
+        setSignedIn, setLoading, setError, setUser, supabase
+    ])
+
+    const value = useMemo(() => ({
+        signIn, signOut, signUp, signedIn, loading, error, user
+    }), [signIn, signOut, signUp, signedIn, loading, error, user])
 
 
     return (<AuthContext.Provider value={value}>{children}</AuthContext.Provider>)
