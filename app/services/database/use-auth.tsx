@@ -1,8 +1,8 @@
 import { User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
-import React, { PropsWithChildren, useCallback, useMemo, useState } from "react";
+import React, { PropsWithChildren, useCallback, useContext, useMemo, useState } from "react";
 
-type AuthContextType {
+type AuthContextType = {
     signIn: (email: string, password: string) => void;
     signUp: (email: string, password: string) => void;
     signOut: () => Promise<void>;
@@ -96,3 +96,13 @@ export const AuthProvider = ({ children }: PropsWithChildren<any>) => {
     return (<AuthContext.Provider value={value}>{children}</AuthContext.Provider>)
 
 }
+
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+
+    if (context === null) {
+        throw new Error('useAuthContext must be used within a AuthProvider')
+    }
+
+    return context;
+};
